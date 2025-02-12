@@ -1,0 +1,45 @@
+## Create a Spring boot application as student-management-app
+
+## Create 1st microservice as called student-app
+
+It has four controller  (Caller)
+
+/student/save  @RequestBody Student
+
+/student/read  Read all student
+
+/student/update (requestparam name, update age) update student age using name
+
+/student/delete  (requestparam name) delete student using name
+
+## Create Second Microservice  calles school-operation  (Receiver)
+
+/school/save   @RequestBody Student
+/school/read   Read all student
+/school/update (requestparam name, update age) update student age using name
+/school/delete  (requestparam name) delete student using name
+
+## Detail of Modle Student
+
+String id
+String name
+String schoolName
+int age
+String gender
+
+Json Model
+
+    {
+         "name":"student1",
+         "schoolName": "school1",
+         "age":17,
+         "gender": "M",
+    }
+
+ Develop This project using TDD and test coverage should be more than 80%
+
+ All the data should get store in Mysql Database
+
+ Create Readme file which contain the all steps
+
+

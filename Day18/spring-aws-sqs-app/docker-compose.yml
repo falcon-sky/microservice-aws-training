@@ -1,0 +1,30 @@
+version: "3.7"
+networks:
+  sqs-network:
+    driver: bridge
+services:
+  localstack:
+    image: localstack/localstack:3.4.0
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=logs,sqs
+      - AWS_DEFAULT_REGION=eu-west-1
+      - LS_LOG=info
+      # Set DEBUG to 1 when fault tracing
+      - DEBUG=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - EDGE_PORT=4566
+    healthcheck:
+      test: "curl --silent --fail localhost:4566/_localstack/health > health.out && curl --silent --fail localhost:4566/_localstack/init >> health.out && cat health.out |grep '\"logs\": \"running\"' | grep '\"sqs\": \"running\"'| grep -v '\"ERROR\"'"
+      interval: 2s
+      retries: 10
+      start_period: 10s
+      timeout: 5s
+    volumes:
+      - ./localstack-ready:/etc/localstack/init/ready.d/
+      - ..:/workdir
+      - /var/lib/localstack:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - sqs-network

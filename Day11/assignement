@@ -1,0 +1,30 @@
+## Create a Spring boot application as student-management-app
+
+## Detail of Modle Patient
+
+String id
+String name
+String schoolName
+int age
+String gender
+
+## Create Controller
+
+/student/save
+
+/student/read
+
+    {
+         "name":"student1",
+         "schoolName": "school1",
+         "age":17,
+         "gender": "M",
+    }
+
+ Develop This project using TDD and test coverage should be more than 80%
+
+ All the data should get store in Mysql Database
+
+ Create Readme file which contain the all steps
+
+

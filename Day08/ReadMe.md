@@ -1,4 +1,7 @@
-Day 8 3.1 Spring Boot Data Access
-- Spring Data JPA
-- CRUD Operations
-- Lab: Building a Spring Boot JPA Application and store the student data in mysql
+# Day 08
+
+    . Spring Boot Unit Test
+    - Unit test annotation
+    - Mocking with spring boot
+    - Unit test coverage
+    - Lab: Create Spring boot application with unit test and its coverage

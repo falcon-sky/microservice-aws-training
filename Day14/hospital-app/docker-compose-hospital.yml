@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  hospital:
+    image: falcon007/hospital-app:latest
+    container_name: hospital-app
+    ports:
+      - "8080:8081"
+    networks:
+      - hospital-network
+
+networks:
+  hospital-network:
+    driver: bridge
