@@ -1,0 +1,45 @@
+## Create Digital parking system
+
+## Create two microservice
+
+1) car-parking-registration
+
+Create two rest controller
+    a) /parking/start
+        RequestBody Car
+        RequestParam parkingNo
+
+        return ParkingStart
+    b) /parking/end
+        RequestParam regNo
+         return ParkingEnd
+    Car Module
+    String ownerName
+    String regNo
+    String module
+    String type
+
+    ParkingStart Module
+     String parkingNo
+     Date startTime  (Should atways current time)
+     String Status   (Start)
+     String String regNo
+
+    ParkingEnd Module
+      String parkingNo
+      Date startTime  (Should atways current time)
+      Date endTime    ( End time)
+      int price
+      String Status   (End)
+      String String regNo
+
+  The price will be calculate based on time difference betweek start and endtime
+
+   PerMinute 2 Rs
+
+2) car-parking-process
+
+The microservice car-parking-registration send the data ParkingStart using sqs to car-parking-process
+This data will get store in dynamodb : QueueName parking-start
+
+While parking end send the regNo using QueneName parking-end and fetch the data from dynamodb and return back.
