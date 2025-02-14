@@ -1,18 +1,13 @@
 server:
-  port: 9092    #port number
+  port: 8082    #port number
  
 eureka:
   instance:
-    leaseRenewalIntervalInSeconds: 1
-    leaseExpirationDurationInSeconds: 2
+    preferIpAddress: true
   client:
     serviceUrl:
-      defaultZone: http://127.0.0.1:8761/eureka/
-    healthcheck:
-      enabled: true
-    lease:
-      duration: 5
- 
+      defaultZone: http://localhost:8761/eureka/
+
 spring:
   application:
     name: school-service    #service name
