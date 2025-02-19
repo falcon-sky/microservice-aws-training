@@ -2,7 +2,7 @@
 
 ## Execute cloudformation to create ecr repository
 
-       aws cloudformation deploy --template-file ecr-template.yml --stack-name create-ecr-repo --capabilities CAPABILITY_NAMED_IAM --profile rama
+    aws cloudformation deploy --template-file ecr-template.yml --stack-name create-ecr-repo --capabilities CAPABILITY_NAMED_IAM --profile rama
 
 ## Verify ECR
 
