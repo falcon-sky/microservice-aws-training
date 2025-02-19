@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Product Configuration Provisioning Api stack
+Parameters:
+  Solution:
+    Type: String
+    Default: "training"
+  Environment:
+    Type: String
+    Default: "test"
+  VisibilityTimeout:
+    Type: String
+    Default: 60
+  MessageTTL:
+    Type: String
+    Default: 7200
+  MaxReceiveCountBeforeDLQ:
+    Type: String
+    Default: 2
+
+Resources:
+  DataEventsQueueDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${Solution}-${Environment}-data-events-dlq"
+      VisibilityTimeout: !Ref VisibilityTimeout
+
+  # Long Polling api queue for provisioning event
+  DataEventsQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub "${Solution}-${Environment}-provisioning-events"
+      RedrivePolicy:
+        deadLetterTargetArn:
+          Fn::GetAtt:
+            - DataEventsQueueDLQ
+            - Arn
+        maxReceiveCount: !Ref MaxReceiveCountBeforeDLQ
+      VisibilityTimeout: !Ref VisibilityTimeout
+      MessageRetentionPeriod: !Ref MessageTTL
+
+  # Data topic for events
+  DataEventsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub ${Solution}-${Environment}-data-events-topics
+
+  DataEventsQueueSourcePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref ProvisioningEventsQueue
+      PolicyDocument:
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: sns.amazonaws.com
+          Action:
+            - sqs:SendMessage
+          Resource: !GetAtt DataEventsQueue.Arn
+          Condition:
+            ArnEquals:
+              aws:SourceArn: !Ref DataEventsTopic
+
+  # Data topic policy for cross account access
+  DataEventsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - sns:Publish
+              - sns:Subscribe
+            Principal:
+              AWS:
+                - !Sub ${AWS::AccountId}
+            Resource:
+              - !Ref DataEventsTopic
+      Topics:
+        - !Ref DataEventsTopic
+
+  # Data SQS subscribe from the SNS
+  DataEventsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      Endpoint: !GetAtt DataEventsQueue.Arn
+      RawMessageDelivery: true
+      TopicArn: !Ref DataEventsTopic
