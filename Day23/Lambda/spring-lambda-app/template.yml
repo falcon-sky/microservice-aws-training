@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  SpringBootLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: springboot-serverless
+      Handler: com.example.serverless.LambdaHandler::handleRequest
+      Runtime: java17
+      CodeUri: ./target/spring-lambda-app-1.0.0.jar
+      MemorySize: 512
+      Timeout: 15
+      Policies:
+        - AWSLambdaBasicExecutionRole
